@@ -1,0 +1,127 @@
+<head>
+  <title>ElectionApp</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+   $(document).ready(function(){
+    console.log("123");
+    $('#mapbutton').on('shown.bs.tab', function()
+    { 
+      console.log("abc");
+        google.maps.event.trigger(map, 'resize');
+        initialize();
+    });
+   })
+
+    
+    //initialize();
+
+
+        
+  </script>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Hillary Clinton vs. Donald Trump</h2>
+    <ul class="nav nav-tabs">
+      <li ><a data-toggle="tab" href="#home">Home</a></li>
+      <li class='active'><a id="mapbutton" data-toggle="tab" href="#maptab">Election TweetMap</a></li>
+      <li><a data-toggle="tab" href="#citi">Citizen Reaction</a></li>
+      <li><a data-toggle="tab" href="#menu3">Personality Insights</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div id="home" class="tab-pane fade ">
+        <div class="thumbnail">
+          <img src="http://static2.politico.com/dims4/default/b5d15c9/2147483647/resize/1160x%3E/quality/90/?url=http%3A%2F%2Fstatic.politico.com%2Fdd%2Fcd%2Fa04f8f8f4730be491f32ecd333b7%2F0909-hilltrump-apgetty.jpg" alt="0909_HillTrump_APGetty.jpg" title="0909_HillTrump_APGetty.jpg">
+        </div>
+      </div>
+      <div id="maptab" class="tab-pane fade in active">
+        <div class="container-fluid">
+          <div id="header" class="row">
+            <h3 id="heading" class="text-center">Hillary Clinton & Donald Trump Recent Tweets TweetMap</h3>
+            <div class="col-md-4">
+              <select placeholder="Select a candidate..." id="selectcandidate">
+                <option value="">Select a candidate...</option>
+                <option value="all">All Candidates</option>
+                <option value="Hillary Clinton">Hillary Clinton</option>          
+                <option value="Donald Trump">Donald Trump</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="map">
+              {{> googleMap name="tweetMap" options=mapOptions}}
+            </div>
+            <div id="legend">
+              <h3>Legend</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="citi" class="tab-pane fade">
+        <div class="container">
+          <div class="page-header">
+            <h3 class="text-center">Real-Time Citizen Reactions by Topic</h3>
+          </div>
+          <div id="main" class="row panel panel-primary">
+            {{> showRating show1=(getShowHillary 'Hillary') show2=(getShowTrump 'Trump')}}    
+          </div>
+        </div>
+      </div>
+      <div id="menu3" class="tab-pane fade">
+        <h3 class="text-center">Personality Insights</h3>
+        <div id="main2" >
+          {{> showPersonality p1=(getPersonality 'Hillary') p2=(getPersonality 'Trump')}}    
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<template name="showRating">
+  <nav style=" width:50%; text-align:center; display: block; margin: 0 auto; z-index: 1">
+    <div class="navicon">
+      <select style="font-size: 20px; cursor:pointer"  name="mydropdown" id="selecttopic">
+        <option value="" disabled selected>Select a topic</option>
+        <option value='politics' selected="selected">Politics</option>
+        <option value='economy'>Economy</option>
+        <option value='commerce'>Education</option>
+        <option value='earth'>Environment</option>
+        <option value='law'>Legal</option>
+      </select>
+    </div>
+    <div id="section1" style="width:100%;">
+      <h4>Hillary Clinton</h4> <span>Sentiment Score: {{show1._source.sentiment}}</span>
+      <div id="container1" style="height: 300px">{{barChart show1._source.emotions show2._source.emotions}}</div>
+    </div>
+
+    <div id="section2">
+      <h4>Donald Trump</h4>
+      <span>Sentiment Score: {{show2._source.sentiment}}</span>
+      <div id="container2" style="height: 300px">{{barChart show1._source.emotions show2._source.emotions}}</div>
+    </div>
+  </nav>
+</template>
+
+<template name="showPersonality" style="width:100%">
+  <div style="width:100%; display: block; margin: 0 auto; z-index: 1">
+      <div id="container3" style="height: 600px; width: 1100px">
+        {{pieChart p1._source.personality p2._source.personality}}
+      </div>
+      <div id="container4" style="height: 600px; width: 1100px">
+        {{pieChart p1._source.personality p2._cource.personality}}
+      </div>
+  </div>
+</template>
+

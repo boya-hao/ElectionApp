@@ -1,0 +1,14 @@
+{
+  "name": "tweetmap",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "elasticsearch": "^11.0.1",
+    "highcharts": "^4.2.5",
+    "highcharts-exporting": "^0.1.2",
+    "http-aws-es": "^1.1.3",
+    "meteor-node-stubs": "~0.2.0"
+  }
+}
